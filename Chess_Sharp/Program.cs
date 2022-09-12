@@ -10,13 +10,20 @@ namespace Chess_Sharp
         {
             Board board = new Board(8, 8);
 
-            board.AddPiece(new Rook(board, Color.Black), new Position(0, 0));
-            board.AddPiece(new Rook(board, Color.Black), new Position(1, 3));
-            board.AddPiece(new King(board, Color.Black), new Position(2, 4));
+            try
+            {
+                board.AddPiece(new Rook(board, Color.Black), new Position(0, 0));
+                board.AddPiece(new Rook(board, Color.Black), new Position(1, 3));
+                board.AddPiece(new King(board, Color.Black), new Position(0, 9));
 
 
-            Screen.PrintBoard(board);
-            Console.ReadLine();
+                Screen.PrintBoard(board);
+                Console.ReadLine();
+            }
+            catch (BoardException e)
+            {
+                Console.WriteLine(e.Message);
+            }
         }
     }
 }
