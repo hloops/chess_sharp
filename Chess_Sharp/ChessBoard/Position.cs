@@ -1,6 +1,6 @@
-﻿namespace Chess_Sharp.Board
+﻿namespace Chess_Sharp.ChessBoard
 {
-    internal class Position
+    class Position
     {
         public int Row { get; set; }
         public int Column { get; set; }

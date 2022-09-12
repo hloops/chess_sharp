@@ -1,4 +1,4 @@
-﻿using Chess_Sharp.Board;
+﻿using Chess_Sharp.ChessBoard;
 using System;
 
 namespace Chess_Sharp
@@ -7,9 +7,12 @@ namespace Chess_Sharp
     {
         static void Main(string[] args)
         {
-            Position p = new Position(3, 4);
-
-            Console.WriteLine(p);
+            Board board = new Board(8, 8);
+            foreach (var item in board)
+            {
+                Console.Write(item);    
+            }
+            Console.WriteLine();
         }
     }
 }
