@@ -6,7 +6,7 @@
         public Color Color { get; protected set; }
 
         public int MovementCount { get; protected set; }
-        public Board Board { get , protected set}
+        public Board Board { get; protected set; }
 
         
         public Piece(Position position, Board board, Color color )

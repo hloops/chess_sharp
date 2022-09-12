@@ -1,5 +1,4 @@
 ﻿namespace Chess_Sharp.ChessBoard
-
 {
     class Board
     {
@@ -14,9 +13,9 @@
             pieces = new Piece[rowsBoard, columnsBoars];
 
         }
-
-
-
-
+        public Piece SinglePiece(int rowsBoard, int columnsBoard)
+        {
+            return pieces[rowsBoard, columnsBoard];
+        }
     }
 }
