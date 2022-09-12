@@ -47,6 +47,8 @@
     <Compile Include="ChessBoard\Color.cs" />
     <Compile Include="ChessBoard\Piece.cs" />
     <Compile Include="ChessBoard\Position.cs" />
+    <Compile Include="ChessGame\King.cs" />
+    <Compile Include="ChessGame\Rook.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Screen.cs" />
