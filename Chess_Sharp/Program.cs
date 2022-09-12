@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Chess_Sharp.Board;
+using System;
 
 namespace Chess_Sharp
 {
@@ -10,6 +7,9 @@ namespace Chess_Sharp
     {
         static void Main(string[] args)
         {
+            Position p = new Position(3, 4);
+
+            Console.WriteLine(p);
         }
     }
 }
