@@ -18,10 +18,27 @@ namespace Chess_Sharp
                     }
                     else
                     {
-                        Console.Write($"{board.SinglePiece(i, j)} ");
+                        PrintPiece(board.SinglePiece(i,j));
+                        Console.Write(" ");
+                        //Console.Write($"{board.SinglePiece(i, j)} ");
                     }
                 }
                 Console.WriteLine();
+            }
+            Console.WriteLine("  a b c d e f g h");
+        }
+        public static void PrintPiece(Piece piece)
+        {
+            if (piece.Color == Color.White)
+            {
+                Console.Write(piece);
+            }
+            else
+            {
+                ConsoleColor aux = Console.ForegroundColor;
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.Write(piece);
+                Console.ForegroundColor = aux;
             }
         }
     }

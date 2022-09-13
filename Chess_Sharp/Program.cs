@@ -8,9 +8,19 @@ namespace Chess_Sharp
     {
         static void Main(string[] args)
         {
-            
-            Board board = new Board(8,8);
-            Console.WriteLine(board);
+            try
+            {
+                Board board = new Board(8, 8);
+                board.AddPiece(new Rook(board, Color.Black), new Position(0, 0));
+                board.AddPiece(new Rook(board, Color.White), new Position(7, 0));
+
+                Screen.PrintBoard(board);
+            }
+            catch (BoardException e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            Console.ReadLine();
         }
     }
 }
