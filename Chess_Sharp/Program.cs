@@ -8,10 +8,9 @@ namespace Chess_Sharp
     {
         static void Main(string[] args)
         {
-            ChessPositioning pos = new ChessPositioning('a', 1);
-
-            Console.WriteLine(pos);
-            Console.WriteLine(pos.toChessPosition());
+            
+            Board board = new Board(8,8);
+            Console.WriteLine(board);
         }
     }
 }

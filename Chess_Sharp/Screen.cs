@@ -9,6 +9,7 @@ namespace Chess_Sharp
         {
             for(int i = 0; i < board.RowsBoard; i++)
             {
+                Console.Write(8 - i + " ");
                 for(int j = 0; j < board.ColumnsBoard; j++)
                 {
                     if(board.SinglePiece(i,j) == null)
