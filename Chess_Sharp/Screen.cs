@@ -1,5 +1,6 @@
 ﻿using System;
 using Chess_Sharp.ChessBoard;
+using Chess_Sharp.ChessGame;
 
 namespace Chess_Sharp
 {
@@ -26,6 +27,13 @@ namespace Chess_Sharp
                 Console.WriteLine();
             }
             Console.WriteLine("  a b c d e f g h");
+        }
+        public static ChessPositioning ReadChessPos()
+        {
+            string s = Console.ReadLine();
+            char column = s[0];
+            int row = int.Parse(s[1] + "");
+            return new ChessPositioning(column, row);
         }
         public static void PrintPiece(Piece piece)
         {

@@ -16,5 +16,10 @@
             Color = color;
             MovementCount = 0;
         }
+
+        public void movementCountIncrement()
+        {
+            MovementCount++;
+        }
     }
 }

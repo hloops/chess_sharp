@@ -10,11 +10,20 @@ namespace Chess_Sharp
         {
             try
             {
-                Board board = new Board(8, 8);
-                board.AddPiece(new Rook(board, Color.Black), new Position(0, 0));
-                board.AddPiece(new Rook(board, Color.White), new Position(7, 0));
+                Mechanics chessMatch = new Mechanics();
+                while (!chessMatch.IsFinished)
+                {
+                    Console.Clear();
+                    Screen.PrintBoard(chessMatch.board);
 
-                Screen.PrintBoard(board);
+                    Console.Write("Star position: ");
+                    Position start = Screen.ReadChessPos().toChessPosition();
+                    Console.Write("Destination position: ");
+                    Position destination = Screen.ReadChessPos().toChessPosition();
+
+                    chessMatch.PlayMove(start, destination);
+                }
+
             }
             catch (BoardException e)
             {
