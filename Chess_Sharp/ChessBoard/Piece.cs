@@ -1,6 +1,6 @@
 ﻿namespace Chess_Sharp.ChessBoard
 {
-    class Piece
+    abstract class Piece
     {
         public Position Position { get; set; }
         public Color Color { get; protected set; }
@@ -21,5 +21,6 @@
         {
             MovementCount++;
         }
+        public abstract bool[,] AllowedMoves();
     }
 }

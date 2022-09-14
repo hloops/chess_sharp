@@ -10,6 +10,11 @@
             Row = row;
             Column = column;
         }
+        public void SetValue(int row, int column)
+        {
+            Row = row;
+            Column = column;
+        }
 
         public override string ToString()
         {

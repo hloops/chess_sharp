@@ -14,10 +14,16 @@ namespace Chess_Sharp
                 while (!chessMatch.IsFinished)
                 {
                     Console.Clear();
-                    Screen.PrintBoard(chessMatch.board);
+                    Screen.PrintBoard(chessMatch.Board);
 
                     Console.Write("Star position: ");
                     Position start = Screen.ReadChessPos().toChessPosition();
+
+                    bool[,] allowedPositioning = chessMatch.Board.SinglePiece(start).AllowedMoves();
+
+                    Console.Clear();
+                    Screen.PrintBoard(chessMatch.Board, allowedPositioning);
+
                     Console.Write("Destination position: ");
                     Position destination = Screen.ReadChessPos().toChessPosition();
 
