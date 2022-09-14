@@ -13,23 +13,38 @@ namespace Chess_Sharp
                 Mechanics chessMatch = new Mechanics();
                 while (!chessMatch.IsFinished)
                 {
-                    Console.Clear();
-                    Screen.PrintBoard(chessMatch.Board);
+                    try
+                    {
+                        Console.Clear();
+                        Screen.PrintBoard(chessMatch.Board);
+                        Console.WriteLine();
+                        Console.WriteLine($"Turn: {chessMatch.Turn}");
+                        Console.WriteLine($"Waiting for {chessMatch.CurrentPlayer} to play.");
 
-                    Console.Write("Star position: ");
-                    Position start = Screen.ReadChessPos().toChessPosition();
+                        Console.Write("Star position: ");
+                        Position start = Screen.ReadChessPos().toChessPosition();
 
-                    bool[,] allowedPositioning = chessMatch.Board.SinglePiece(start).AllowedMoves();
+                        chessMatch.ValidateStartPosition(start);
 
-                    Console.Clear();
-                    Screen.PrintBoard(chessMatch.Board, allowedPositioning);
+                        bool[,] allowedPositioning = chessMatch.Board.SinglePiece(start).AllowedMoves();
 
-                    Console.Write("Destination position: ");
-                    Position destination = Screen.ReadChessPos().toChessPosition();
+                        Console.Clear();
+                        Screen.PrintBoard(chessMatch.Board, allowedPositioning);
 
-                    chessMatch.PlayMove(start, destination);
+                        Console.Write("Destination position: ");
+                        Position destination = Screen.ReadChessPos().toChessPosition();
+
+                        chessMatch.MakeAPlay(start, destination);
+                    }
+                    catch (BoardException e)
+                    {
+                        Console.WriteLine(e.Message);
+                        Console.ReadLine();
+                    }
+                    {
+
+                    }
                 }
-
             }
             catch (BoardException e)
             {

@@ -71,7 +71,7 @@ namespace Chess_Sharp
                     Console.Write(piece);
                     Console.ForegroundColor = aux;
                 }
-                Console.WriteLine(" ");
+                Console.Write(" ");
             }
         }
     }
