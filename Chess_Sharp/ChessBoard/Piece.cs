@@ -37,6 +37,11 @@
             }
             return false;
         }
+
+        public bool CanMoveTo(Position pos)
+        {
+            return AllowedMoves()[pos.Row, pos.Column];
+        }
         public abstract bool[,] AllowedMoves();
     }
 }

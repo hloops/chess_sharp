@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Chess_Sharp.ChessBoard;
 using Chess_Sharp.ChessGame;
 
@@ -10,6 +11,8 @@ namespace Chess_Sharp.ChessGame
         public int Turn { get; private set; }
         public Color CurrentPlayer { get; private set; }
         public bool IsFinished { get; private set; }
+        private HashSet<Piece> Pieces;
+        private HashSet<Piece> PiecesCemetery;
 
 
         public Mechanics()
@@ -17,7 +20,9 @@ namespace Chess_Sharp.ChessGame
             Board = new Board(8, 8);
             Turn = 1;
             CurrentPlayer = Color.White;
-            PieceInitialization();
+            Pieces = new HashSet<Piece>();
+            PiecesCemetery = new HashSet<Piece>();  
+            PieceInitialization();  
         }
         public void PlayMove(Position start, Position destination)
         {
@@ -25,6 +30,10 @@ namespace Chess_Sharp.ChessGame
             p.movementCountIncrement();
             Piece capturedPiece = Board.RemovePiece(destination);
             Board.AddPiece(p, destination);
+            if(capturedPiece != null)
+            {
+                PiecesCemetery.Add(capturedPiece);
+            }
         }
         public void MakeAPlay  ( Position start, Position destination)
         {
@@ -32,17 +41,7 @@ namespace Chess_Sharp.ChessGame
             Turn++;
             SwitchPlayer();
         }
-        private void SwitchPlayer()
-        {
-            if (CurrentPlayer == Color.White)
-            {
-                CurrentPlayer = Color.Black;
-            }
-            else
-            {
-                CurrentPlayer = Color.White;
-            }
-        }
+
         public void ValidateStartPosition(Position pos)
         {
             if (Board.SinglePiece(pos) == null)
@@ -59,12 +58,65 @@ namespace Chess_Sharp.ChessGame
             }
 
         }
+        public void ValidateDestinationPosition(Position start, Position destination)
+        {
+            if (!Board.SinglePiece(start).CanMoveTo(destination))
+            {
+                throw new BoardException("Invalid destination");
+            }
+
+        }
+        private void SwitchPlayer()
+        {
+            if (CurrentPlayer == Color.White)
+            {
+                CurrentPlayer = Color.Black;
+            }
+            else
+            {
+                CurrentPlayer = Color.White;
+            }
+        }
+        public HashSet<Piece> CapturedPieces(Color color)
+        {
+            HashSet<Piece> aux = new HashSet<Piece>();
+            foreach(Piece x in PiecesCemetery)
+            {
+                if (x.Color == color)
+                {
+                    aux.Add(x);
+                }
+            }
+            return aux;
+        } 
+        public HashSet<Piece> PiecesOnBoard(Color color)
+        {
+            HashSet<Piece> aux = new HashSet<Piece>();
+            foreach(Piece x in Pieces)
+            {
+                if (x.Color == color)
+                {
+                    aux.Add(x);
+                }
+            }
+            aux.ExceptWith(CapturedPieces(color));
+            return aux;
+        }
+
+        public void AddPieceToBoard(char column, int row, Piece piece)
+        {
+            Board.AddPiece(piece, new ChessPositioning(column, row).toChessPosition());
+            Pieces.Add(piece);
+        }
         private void PieceInitialization()
         {
-            Board.AddPiece(new Rook(Board, Color.White), new ChessPositioning('a', 1).toChessPosition());
-            Board.AddPiece(new Rook(Board, Color.White), new ChessPositioning('h', 1).toChessPosition());
-            Board.AddPiece(new Rook(Board, Color.Black), new ChessPositioning('a', 8).toChessPosition());
-            Board.AddPiece(new Rook(Board, Color.Black), new ChessPositioning('h', 8).toChessPosition());
+            AddPieceToBoard('a', 1, new Rook(Board, Color.White));
+            AddPieceToBoard('h', 1, new Rook(Board, Color.White));
+            AddPieceToBoard('e', 1, new King(Board, Color.White));
+
+            AddPieceToBoard('a', 8, new Rook(Board, Color.Black));
+            AddPieceToBoard('h', 8, new Rook(Board, Color.Black));
+            AddPieceToBoard('e', 8, new King(Board, Color.Black));
         }
     }
 }

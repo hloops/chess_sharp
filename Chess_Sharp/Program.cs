@@ -16,10 +16,7 @@ namespace Chess_Sharp
                     try
                     {
                         Console.Clear();
-                        Screen.PrintBoard(chessMatch.Board);
-                        Console.WriteLine();
-                        Console.WriteLine($"Turn: {chessMatch.Turn}");
-                        Console.WriteLine($"Waiting for {chessMatch.CurrentPlayer} to play.");
+                        Screen.PrintMatch(chessMatch);
 
                         Console.Write("Star position: ");
                         Position start = Screen.ReadChessPos().toChessPosition();
@@ -33,6 +30,7 @@ namespace Chess_Sharp
 
                         Console.Write("Destination position: ");
                         Position destination = Screen.ReadChessPos().toChessPosition();
+                        chessMatch.ValidateDestinationPosition(start, destination);
 
                         chessMatch.MakeAPlay(start, destination);
                     }
