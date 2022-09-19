@@ -43,6 +43,9 @@ namespace Chess_Sharp
 
                     }
                 }
+                Console.Clear();
+                Screen.PrintMatch(chessMatch);
+
             }
             catch (BoardException e)
             {

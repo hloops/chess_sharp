@@ -37,7 +37,7 @@ namespace Chess_Sharp.ChessGame
             }
             return capturedPiece;
         }
-        public void UndoMove (Position start, Position destination, Piece capturedPiece)
+        public void UndoMove(Position start, Position destination, Piece capturedPiece)
         {
             Piece p = Board.RemovePiece(destination);
             p.movementCountDencrement();
@@ -68,9 +68,16 @@ namespace Chess_Sharp.ChessGame
             {
                 CheckStatus = false;
             }
+            if (IsInCheckmate(Opponent(CurrentPlayer)))
+            {
+                IsFinished = true;
+            }
+            else
+            {
+                Turn++;
+                SwitchPlayer();
+            }
 
-            Turn++;
-            SwitchPlayer();
         }
 
         public void ValidateStartPosition(Position pos)
@@ -171,6 +178,37 @@ namespace Chess_Sharp.ChessGame
                 }
             }
             return false;
+        }
+        public bool IsInCheckmate(Color color)
+        {
+            if (!IsInCheck(color))
+            {
+                return false;
+            }
+            foreach (Piece x in PiecesOnBoard(color))
+            {
+                bool[,] matrix = x.AllowedMoves();
+                for (int i = 0; i < Board.RowsBoard; i++)
+                {
+                    for (int j = 0; j < Board.ColumnsBoard; j++)
+                    {
+                        if (matrix[i, j])
+                        {
+                            Position start = x.Position;
+                            Position destination = new Position(i, j);
+                            Piece capturedPiece = PlayMove(start, destination);
+                            bool checkTest = IsInCheck(color);
+                            UndoMove(start, destination, capturedPiece);
+                            if (!checkTest)
+                            {
+                                return false;
+                            }
+
+                        }
+                    }
+                }
+            }
+            return true;
         }
 
         public void AddPieceToBoard(char column, int row, Piece piece)
