@@ -14,6 +14,10 @@ namespace Chess_Sharp
             PrintCapturedPieces(match);
             Console.WriteLine($"Turn: {match.Turn}\n");
             Console.WriteLine($"Waiting for {match.CurrentPlayer} to play.");
+            if (match.CheckStatus)
+            {
+                Console.WriteLine("\n***** Check! *****\n");
+            }
         }
         public static void PrintCapturedPieces (Mechanics match)
         {

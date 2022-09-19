@@ -13,6 +13,7 @@ namespace Chess_Sharp.ChessGame
         public bool IsFinished { get; private set; }
         private HashSet<Piece> Pieces;
         private HashSet<Piece> PiecesCemetery;
+        public bool CheckStatus { get; private set; }
 
 
         public Mechanics()
@@ -21,23 +22,53 @@ namespace Chess_Sharp.ChessGame
             Turn = 1;
             CurrentPlayer = Color.White;
             Pieces = new HashSet<Piece>();
-            PiecesCemetery = new HashSet<Piece>();  
-            PieceInitialization();  
+            PiecesCemetery = new HashSet<Piece>();
+            PieceInitialization();
         }
-        public void PlayMove(Position start, Position destination)
+        public Piece PlayMove(Position start, Position destination)
         {
             Piece p = Board.RemovePiece(start);
             p.movementCountIncrement();
             Piece capturedPiece = Board.RemovePiece(destination);
             Board.AddPiece(p, destination);
-            if(capturedPiece != null)
+            if (capturedPiece != null)
             {
                 PiecesCemetery.Add(capturedPiece);
             }
+            return capturedPiece;
         }
-        public void MakeAPlay  ( Position start, Position destination)
+        public void UndoMove (Position start, Position destination, Piece capturedPiece)
         {
-            PlayMove(start, destination);
+            Piece p = Board.RemovePiece(destination);
+            p.movementCountDencrement();
+            if (capturedPiece != null)
+            {
+                Board.AddPiece(capturedPiece, destination);
+                PiecesCemetery.Remove(capturedPiece);
+            }
+            Board.AddPiece(p, start);
+
+
+        }
+        public void MakeAPlay(Position start, Position destination)
+        {
+            Piece capturedPiece = PlayMove(start, destination);
+
+            if (IsInCheck(CurrentPlayer))
+            {
+                UndoMove(start, destination, capturedPiece);
+                throw new BoardException("You cannot be in check!");
+
+            }
+            if (IsInCheck(Opponent(CurrentPlayer)))
+            {
+                CheckStatus = true;
+            }
+            else
+            {
+                CheckStatus = false;
+            }
+
             Turn++;
             SwitchPlayer();
         }
@@ -47,12 +78,12 @@ namespace Chess_Sharp.ChessGame
             if (Board.SinglePiece(pos) == null)
             {
                 throw new BoardException("There's no piece on the selected spot.");
-            } 
+            }
             if (CurrentPlayer != Board.SinglePiece(pos).Color)
             {
                 throw new BoardException("This piece is not yours.");
             }
-            if (!Board.SinglePiece(pos).IsThereAnyMovesPossible()) 
+            if (!Board.SinglePiece(pos).IsThereAnyMovesPossible())
             {
                 throw new BoardException("There's no possible moves.");
             }
@@ -80,7 +111,7 @@ namespace Chess_Sharp.ChessGame
         public HashSet<Piece> CapturedPieces(Color color)
         {
             HashSet<Piece> aux = new HashSet<Piece>();
-            foreach(Piece x in PiecesCemetery)
+            foreach (Piece x in PiecesCemetery)
             {
                 if (x.Color == color)
                 {
@@ -88,11 +119,11 @@ namespace Chess_Sharp.ChessGame
                 }
             }
             return aux;
-        } 
+        }
         public HashSet<Piece> PiecesOnBoard(Color color)
         {
             HashSet<Piece> aux = new HashSet<Piece>();
-            foreach(Piece x in Pieces)
+            foreach (Piece x in Pieces)
             {
                 if (x.Color == color)
                 {
@@ -101,6 +132,45 @@ namespace Chess_Sharp.ChessGame
             }
             aux.ExceptWith(CapturedPieces(color));
             return aux;
+        }
+        private Color Opponent(Color color)
+        {
+            if (color == Color.White)
+            {
+                return Color.Black;
+            }
+            else
+            {
+                return Color.White;
+            }
+        }
+        private Piece King(Color color)
+        {
+            foreach (Piece x in PiecesOnBoard(color))
+            {
+                if (x is King)
+                {
+                    return x;
+                }
+            }
+            return null;
+        }
+        public bool IsInCheck(Color color)
+        {
+            Piece K = King(color);
+            if (K == null)
+            {
+                throw new BoardException($"There's no {color} King on the board!");
+            }
+            foreach (Piece x in PiecesOnBoard(Opponent(color)))
+            {
+                bool[,] matrix = x.AllowedMoves();
+                if (matrix[K.Position.Row, K.Position.Column])
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         public void AddPieceToBoard(char column, int row, Piece piece)

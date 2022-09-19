@@ -21,6 +21,10 @@
         {
             MovementCount++;
         }
+        public void movementCountDencrement()
+        {
+            MovementCount--;
+        }
 
         public bool IsThereAnyMovesPossible()
         {
