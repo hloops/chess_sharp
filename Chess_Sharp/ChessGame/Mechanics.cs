@@ -35,18 +35,62 @@ namespace Chess_Sharp.ChessGame
             {
                 PiecesCemetery.Add(capturedPiece);
             }
+
+            //Castling
+            //King Side
+            if(p is King && destination.Column == start.Column + 2)
+            {
+                Position RookStartPosition = new Position(start.Row, start.Column + 3);
+                Position RookEndPosition = new Position(start.Row, start.Column + 1);
+
+                Piece rook = Board.RemovePiece(RookStartPosition);
+                rook.movementCountIncrement();
+                Board.AddPiece(rook, RookEndPosition);
+            }
+            //Queen Side
+            if (p is King && destination.Column == start.Column - 2)
+            {
+                Position RookStartPosition = new Position(start.Row, start.Column - 4);
+                Position RookEndPosition = new Position(start.Row, start.Column - 1);
+
+                Piece rook = Board.RemovePiece(RookStartPosition);
+                rook.movementCountIncrement();
+                Board.AddPiece(rook, RookEndPosition);
+            }
             return capturedPiece;
         }
         public void UndoMove(Position start, Position destination, Piece capturedPiece)
         {
             Piece p = Board.RemovePiece(destination);
-            p.movementCountDencrement();
+            p.movementCountDecrement();
             if (capturedPiece != null)
             {
                 Board.AddPiece(capturedPiece, destination);
                 PiecesCemetery.Remove(capturedPiece);
             }
             Board.AddPiece(p, start);
+
+            //Undo Castling
+            //King Side
+            if (p is King && destination.Column == start.Column + 2)
+            {
+                Position RookStartPosition = new Position(start.Row, start.Column + 3);
+                Position RookEndPosition = new Position(start.Row, start.Column + 1);
+
+                Piece rook = Board.RemovePiece(RookEndPosition);
+                rook.movementCountDecrement();
+                Board.AddPiece(rook, RookStartPosition);
+            }
+            //Queen Side
+            if (p is King && destination.Column == start.Column - 2)
+            {
+                Position RookStartPosition = new Position(start.Row, start.Column - 4);
+                Position RookEndPosition = new Position(start.Row, start.Column - 1);
+
+                Piece rook = Board.RemovePiece(RookEndPosition);
+                rook.movementCountDecrement();
+                Board.AddPiece(rook, RookStartPosition);
+            }
 
 
         }
@@ -219,12 +263,39 @@ namespace Chess_Sharp.ChessGame
         private void PieceInitialization()
         {
             AddPieceToBoard('a', 1, new Rook(Board, Color.White));
+            AddPieceToBoard('b', 1, new Knight(Board, Color.White));
+            AddPieceToBoard('c', 1, new Bishop(Board, Color.White));
+            AddPieceToBoard('d', 1, new Queen(Board, Color.White));
+            AddPieceToBoard('e', 1, new King(Board, Color.White, this));
+            AddPieceToBoard('f', 1, new Knight(Board, Color.White));
+            AddPieceToBoard('g', 1, new Bishop(Board, Color.White));
             AddPieceToBoard('h', 1, new Rook(Board, Color.White));
-            AddPieceToBoard('e', 1, new King(Board, Color.White));
+            /*AddPieceToBoard('a', 2, new Pawn(Board, Color.White));
+            AddPieceToBoard('b', 2, new Pawn(Board, Color.White));
+            AddPieceToBoard('c', 2, new Pawn(Board, Color.White));
+            AddPieceToBoard('d', 2, new Pawn(Board, Color.White));
+            AddPieceToBoard('e', 2, new Pawn(Board, Color.White));
+            AddPieceToBoard('f', 2, new Pawn(Board, Color.White));
+            AddPieceToBoard('g', 2, new Pawn(Board, Color.White));
+            AddPieceToBoard('h', 2, new Pawn(Board, Color.White));
 
+
+            AddPieceToBoard('a', 7, new Pawn(Board, Color.Black));
+            AddPieceToBoard('b', 7, new Pawn(Board, Color.Black));
+            AddPieceToBoard('c', 7, new Pawn(Board, Color.Black));
+            AddPieceToBoard('d', 7, new Pawn(Board, Color.Black));
+            AddPieceToBoard('e', 7, new Pawn(Board, Color.Black));
+            AddPieceToBoard('f', 7, new Pawn(Board, Color.Black));
+            AddPieceToBoard('g', 7, new Pawn(Board, Color.Black));
+            AddPieceToBoard('h', 7, new Pawn(Board, Color.Black));*/
             AddPieceToBoard('a', 8, new Rook(Board, Color.Black));
+            AddPieceToBoard('b', 8, new Knight(Board, Color.Black));
+            AddPieceToBoard('c', 8, new Bishop(Board, Color.Black));
+            AddPieceToBoard('d', 8, new Queen(Board, Color.Black));
+            AddPieceToBoard('e', 8, new King(Board, Color.Black, this));
+            AddPieceToBoard('f', 8, new Bishop(Board, Color.Black));
+            AddPieceToBoard('g', 8, new Knight(Board, Color.Black));
             AddPieceToBoard('h', 8, new Rook(Board, Color.Black));
-            AddPieceToBoard('e', 8, new King(Board, Color.Black));
         }
     }
 }

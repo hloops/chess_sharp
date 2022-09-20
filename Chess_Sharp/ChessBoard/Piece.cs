@@ -21,7 +21,7 @@
         {
             MovementCount++;
         }
-        public void movementCountDencrement()
+        public void movementCountDecrement()
         {
             MovementCount--;
         }
