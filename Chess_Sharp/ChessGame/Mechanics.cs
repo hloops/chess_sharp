@@ -15,6 +15,8 @@ namespace Chess_Sharp.ChessGame
         private HashSet<Piece> PiecesCemetery;
         public bool CheckStatus { get; private set; }
 
+        public Piece EnPassantVulnerability {get; private set; }
+
 
         public Mechanics()
         {
@@ -23,6 +25,7 @@ namespace Chess_Sharp.ChessGame
             CurrentPlayer = Color.White;
             Pieces = new HashSet<Piece>();
             PiecesCemetery = new HashSet<Piece>();
+            EnPassantVulnerability = null;
             PieceInitialization();
         }
         public Piece PlayMove(Position start, Position destination)
@@ -56,6 +59,25 @@ namespace Chess_Sharp.ChessGame
                 Piece rook = Board.RemovePiece(RookStartPosition);
                 rook.movementCountIncrement();
                 Board.AddPiece(rook, RookEndPosition);
+            }
+
+            //En Passant
+            if (p is Pawn)
+            {
+                if (start.Column != destination.Column && capturedPiece == null)
+                {
+                    Position PawnPosition;
+                    if (p.Color == Color.White)
+                    {
+                        PawnPosition = new Position(destination.Row + 1, destination.Column);
+                    }
+                    else
+                    {
+                        PawnPosition = new Position(destination.Row - 1, destination.Column);
+                    }
+                    capturedPiece = Board.RemovePiece(PawnPosition);
+                    PiecesCemetery.Add(capturedPiece);
+                }
             }
             return capturedPiece;
         }
@@ -92,7 +114,25 @@ namespace Chess_Sharp.ChessGame
                 Board.AddPiece(rook, RookStartPosition);
             }
 
+            //En Passant
+            if (p is Pawn)
+            {
+                if (start.Column != destination.Column && capturedPiece == EnPassantVulnerability)
+                {
+                    Piece pawnToBeReturned = Board.RemovePiece(destination);
+                    Position PawnPosition;
 
+                    if (p.Color == Color.White)
+                    {
+                        PawnPosition = new Position(3, destination.Column);
+                    }
+                    else
+                    {
+                        PawnPosition = new Position(4, destination.Column);
+                    }
+                    Board.AddPiece(pawnToBeReturned,PawnPosition);
+                }
+            }
         }
         public void MakeAPlay(Position start, Position destination)
         {
@@ -121,6 +161,18 @@ namespace Chess_Sharp.ChessGame
                 Turn++;
                 SwitchPlayer();
             }
+            Piece p = Board.SinglePiece(destination);
+            
+            //En Passant
+            if (p is Pawn && (destination.Row == start.Row +2 || destination.Row == start.Row - 2))
+            {
+                EnPassantVulnerability = p;
+            }
+            else
+            {
+                EnPassantVulnerability = null;
+            }
+
 
         }
 
@@ -270,24 +322,23 @@ namespace Chess_Sharp.ChessGame
             AddPieceToBoard('f', 1, new Knight(Board, Color.White));
             AddPieceToBoard('g', 1, new Bishop(Board, Color.White));
             AddPieceToBoard('h', 1, new Rook(Board, Color.White));
-            /*AddPieceToBoard('a', 2, new Pawn(Board, Color.White));
-            AddPieceToBoard('b', 2, new Pawn(Board, Color.White));
-            AddPieceToBoard('c', 2, new Pawn(Board, Color.White));
-            AddPieceToBoard('d', 2, new Pawn(Board, Color.White));
-            AddPieceToBoard('e', 2, new Pawn(Board, Color.White));
-            AddPieceToBoard('f', 2, new Pawn(Board, Color.White));
-            AddPieceToBoard('g', 2, new Pawn(Board, Color.White));
-            AddPieceToBoard('h', 2, new Pawn(Board, Color.White));
+            AddPieceToBoard('a', 2, new Pawn(Board, Color.White, this));
+            AddPieceToBoard('b', 2, new Pawn(Board, Color.White, this));
+            AddPieceToBoard('c', 2, new Pawn(Board, Color.White, this));
+            AddPieceToBoard('d', 2, new Pawn(Board, Color.White, this));
+            AddPieceToBoard('e', 2, new Pawn(Board, Color.White, this));
+            AddPieceToBoard('f', 2, new Pawn(Board, Color.White, this));
+            AddPieceToBoard('g', 2, new Pawn(Board, Color.White, this));
+            AddPieceToBoard('h', 2, new Pawn(Board, Color.White, this));
 
-
-            AddPieceToBoard('a', 7, new Pawn(Board, Color.Black));
-            AddPieceToBoard('b', 7, new Pawn(Board, Color.Black));
-            AddPieceToBoard('c', 7, new Pawn(Board, Color.Black));
-            AddPieceToBoard('d', 7, new Pawn(Board, Color.Black));
-            AddPieceToBoard('e', 7, new Pawn(Board, Color.Black));
-            AddPieceToBoard('f', 7, new Pawn(Board, Color.Black));
-            AddPieceToBoard('g', 7, new Pawn(Board, Color.Black));
-            AddPieceToBoard('h', 7, new Pawn(Board, Color.Black));*/
+            AddPieceToBoard('a', 7, new Pawn(Board, Color.Black, this));
+            AddPieceToBoard('b', 7, new Pawn(Board, Color.Black, this));
+            AddPieceToBoard('c', 7, new Pawn(Board, Color.Black, this));
+            AddPieceToBoard('d', 7, new Pawn(Board, Color.Black, this));
+            AddPieceToBoard('e', 7, new Pawn(Board, Color.Black, this));
+            AddPieceToBoard('f', 7, new Pawn(Board, Color.Black, this));
+            AddPieceToBoard('g', 7, new Pawn(Board, Color.Black, this));
+            AddPieceToBoard('h', 7, new Pawn(Board, Color.Black, this));
             AddPieceToBoard('a', 8, new Rook(Board, Color.Black));
             AddPieceToBoard('b', 8, new Knight(Board, Color.Black));
             AddPieceToBoard('c', 8, new Bishop(Board, Color.Black));
