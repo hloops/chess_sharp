@@ -137,7 +137,20 @@ namespace Chess_Sharp.ChessGame
         public void MakeAPlay(Position start, Position destination)
         {
             Piece capturedPiece = PlayMove(start, destination);
+            Piece p = Board.SinglePiece(destination);
 
+            // Pawn Promotion
+            if (p is Pawn)
+            {
+                if ((p.Color == Color.White && destination.Row == 0) || (p.Color == Color.Black && destination.Row == 7))
+                {
+                    p = Board.RemovePiece(destination);
+                    Pieces.Remove(p);
+                    Piece queen = new Queen(Board, p.Color);
+                    Board.AddPiece(queen, destination);
+                    Pieces.Add(queen);
+                }
+            }
             if (IsInCheck(CurrentPlayer))
             {
                 UndoMove(start, destination, capturedPiece);
@@ -161,7 +174,6 @@ namespace Chess_Sharp.ChessGame
                 Turn++;
                 SwitchPlayer();
             }
-            Piece p = Board.SinglePiece(destination);
             
             //En Passant
             if (p is Pawn && (destination.Row == start.Row +2 || destination.Row == start.Row - 2))
@@ -172,8 +184,6 @@ namespace Chess_Sharp.ChessGame
             {
                 EnPassantVulnerability = null;
             }
-
-
         }
 
         public void ValidateStartPosition(Position pos)
